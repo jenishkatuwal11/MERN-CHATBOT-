@@ -1,12 +1,17 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
+import axios from "../../../api/axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 
 const RegisterPage = ({ onSwitchToLogin, onRegister }) => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    firstname: "",
+    lastname: "",
     email: "",
     password: "",
   });
@@ -32,12 +37,12 @@ const RegisterPage = ({ onSwitchToLogin, onRegister }) => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.firstName) {
-      newErrors.firstName = "First name is required";
+    if (!formData.firstname) {
+      newErrors.firstname = "First name is required";
     }
 
-    if (!formData.lastName) {
-      newErrors.lastName = "Last name is required";
+    if (!formData.lastname) {
+      newErrors.lastname = "Last name is required";
     }
 
     if (!formData.email) {
@@ -59,12 +64,30 @@ const RegisterPage = ({ onSwitchToLogin, onRegister }) => {
     if (!validateForm()) return;
 
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+
+    try {
+      // Make actual API call
+      const response = await axios.post("/register", formData);
+      toast.success("Registration successful!", {
+        position: "bottom-center",
+        autoClose: 3000,
+      });
+
+      // Optional: call onRegister callback with API response
+      onRegister?.(response.data);
+      setTimeout(() => {
+        navigate("/"); // or wherever your login route is
+      }, 3000);
+    } catch (error) {
+      console.error(
+        "Registration failed:",
+        error.response?.data?.message || error.message
+      );
+      // Optional: set error message in state and show to user
+    } finally {
+      // Always runs, success or error
       setIsLoading(false);
-      console.log("Register attempt:", formData);
-      onRegister?.(formData);
-    }, 1500);
+    }
   };
 
   const handleGoogleRegister = () => {
@@ -118,17 +141,17 @@ const RegisterPage = ({ onSwitchToLogin, onRegister }) => {
                 </label>
                 <input
                   type="text"
-                  name="firstName"
-                  value={formData.firstName}
+                  name="firstname"
+                  value={formData.firstname}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 ${
                     errors.firstName ? "border-red-500" : "border-gray-200"
                   }`}
                   placeholder="First name"
                 />
-                {errors.firstName && (
+                {errors.firstname && (
                   <p className="mt-1 text-xs text-red-500">
-                    {errors.firstName}
+                    {errors.firstname}
                   </p>
                 )}
               </div>
@@ -138,16 +161,16 @@ const RegisterPage = ({ onSwitchToLogin, onRegister }) => {
                 </label>
                 <input
                   type="text"
-                  name="lastName"
-                  value={formData.lastName}
+                  name="lastname"
+                  value={formData.lastname}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 ${
-                    errors.lastName ? "border-red-500" : "border-gray-200"
+                    errors.lastname ? "border-red-500" : "border-gray-200"
                   }`}
                   placeholder="Last name"
                 />
-                {errors.lastName && (
-                  <p className="mt-1 text-xs text-red-500">{errors.lastName}</p>
+                {errors.lastname && (
+                  <p className="mt-1 text-xs text-red-500">{errors.lastname}</p>
                 )}
               </div>
             </div>
