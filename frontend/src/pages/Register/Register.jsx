@@ -76,7 +76,7 @@ const RegisterPage = ({ onSwitchToLogin, onRegister }) => {
       // Optional: call onRegister callback with API response
       onRegister?.(response.data);
       setTimeout(() => {
-        navigate("/"); // or wherever your login route is
+        navigate("/login"); // or wherever your login route is
       }, 3000);
     } catch (error) {
       console.error(

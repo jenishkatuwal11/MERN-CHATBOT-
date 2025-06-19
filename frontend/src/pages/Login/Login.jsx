@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const LoginPage = ({ onSwitchToRegister, onLogin }) => {
   const [formData, setFormData] = useState({
     email: "",
@@ -10,6 +12,7 @@ const LoginPage = ({ onSwitchToRegister, onLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -49,12 +52,52 @@ const LoginPage = ({ onSwitchToRegister, onLogin }) => {
     if (!validateForm()) return;
 
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      let data = null;
+      try {
+        data = await response.json();
+      } catch (err) {
+        console.warn("Failed to parse JSON:", err);
+      }
+
+      if (response.ok) {
+        toast.success("Login successful!", {
+          position: "bottom-center",
+          autoClose: 2000,
+        });
+
+        onLogin?.(data || formData);
+
+        setTimeout(() => {
+          navigate("/chat-bot");
+        }, 2000);
+      } else {
+        toast.error(data?.message || "Login failed", {
+          position: "bottom-center",
+          autoClose: 3000,
+        });
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      toast.error("Something went wrong!", {
+        position: "bottom-center",
+        autoClose: 3000,
+      });
+    } finally {
       setIsLoading(false);
-      console.log("Login attempt:", formData);
-      onLogin?.(formData);
-    }, 1500);
+    }
   };
 
   const handleGoogleLogin = () => {
