@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Home from "./pages/Homepage/chatbot";
-import Login from "./pages/Login/login";
+import Login from "./pages/Login/Login";
 import Signup from "./pages/Register/Register";
 import AuthLayout from "./components/AuthLayout";
 
