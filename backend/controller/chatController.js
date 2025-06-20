@@ -4,7 +4,7 @@ const openai = new OpenAI({
   apiKey: process.env.MERN_GEMINFLASH,
   baseURL: "https://openrouter.ai/api/v1",
   defaultHeaders: {
-    "HTTP-Referer": "http://localhost:5173",
+    "HTTP-Referer": "https://mern-chatbotai.onrender.com",
     "X-Title": "MERN Chatbot",
   },
 });
