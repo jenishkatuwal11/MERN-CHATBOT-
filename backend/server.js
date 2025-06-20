@@ -9,7 +9,7 @@ const botRoutes = require("./routes/botRoutes.js");
 const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://your-frontend-domain.com",
+  "https://mern-chatbotai.onrender.com",
 ];
 
 app.use(
