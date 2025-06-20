@@ -38,17 +38,37 @@ const ChatBotUI = () => {
     setInputText("");
     setIsTyping(true);
 
-    // Simulate bot response
-    setTimeout(() => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: inputText }),
+      });
+
+      const data = await res.json();
+
       const botResponse = {
         id: messages.length + 2,
-        text: "I understand your message. This is a simulated response from the AI assistant. In a real implementation, this would be connected to your AI backend.",
+        text: data.reply,
+        sender: "bot",
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, botResponse]);
+    } catch (error) {
+      console.error("Error communicating with backend:", error);
+      const botResponse = {
+        id: messages.length + 2,
+        text: "Oops! Something went wrong while contacting the AI assistant.",
         sender: "bot",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, botResponse]);
-      setIsTyping(false);
-    }, 1500);
+    }
+
+    setIsTyping(false);
   };
 
   const handleKeyPress = (e) => {
