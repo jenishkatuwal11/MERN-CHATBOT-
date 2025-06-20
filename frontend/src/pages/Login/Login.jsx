@@ -81,7 +81,7 @@ const LoginPage = ({ onSwitchToRegister, onLogin }) => {
         onLogin?.(data || formData);
 
         setTimeout(() => {
-          navigate("/chat-bot");
+          navigate("/chat");
         }, 2000);
       } else {
         toast.error(data?.message || "Login failed", {
