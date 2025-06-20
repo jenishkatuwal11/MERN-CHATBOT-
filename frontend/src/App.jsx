@@ -12,7 +12,7 @@ function App() {
       <BrowserRouter>
         <ToastContainer position="bottom-center" autoClose={3000} />
         <Routes element={<AuthLayout />}>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/register" element={<Signup />} />
           <Route path="/chat-bot" element={<Home />} />
         </Routes>
