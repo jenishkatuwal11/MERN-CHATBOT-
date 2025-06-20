@@ -66,8 +66,10 @@ const RegisterPage = ({ onSwitchToLogin, onRegister }) => {
     setIsLoading(true);
 
     try {
-      // Make actual API call
-      const response = await axios.post("/register", formData);
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/register`,
+        formData
+      );
       toast.success("Registration successful!", {
         position: "bottom-center",
         autoClose: 3000,
