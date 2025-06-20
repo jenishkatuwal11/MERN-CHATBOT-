@@ -7,8 +7,17 @@ const userRoutes = require("./routes/userRoutes.js");
 const botRoutes = require("./routes/botRoutes.js");
 
 const app = express();
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://your-frontend-domain.com",
+];
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 
 app.use(bodyParser.json());
 
