@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Send, User, Bot, Menu, Plus, MessageSquare } from "lucide-react";
+import { AiOutlineLogout } from "react-icons/ai";
 
 const ChatBotUI = () => {
   const [messages, setMessages] = useState([
@@ -82,36 +83,52 @@ const ChatBotUI = () => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = "/";
+  };
+
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
       <div
         className={`bg-gray-900 text-white transition-all duration-300 ${
           sidebarOpen ? "w-64" : "w-0 md:w-64"
-        } overflow-hidden`}
+        } overflow-hidden flex flex-col`}
       >
-        <div className="p-4">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-xl font-bold">ChatBot</h1>
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="md:hidden p-1 hover:bg-gray-700 rounded"
-            >
-              <Menu size={20} />
+        <div className="p-4 flex flex-col justify-between h-full">
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <h1 className="text-xl font-bold">ChatBot</h1>
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="md:hidden p-1 hover:bg-gray-700 rounded"
+              >
+                <Menu size={20} />
+              </button>
+            </div>
+
+            <button className="w-full flex items-center gap-3 p-3 bg-gray-800 hover:bg-gray-700 rounded-lg mb-4 transition-colors">
+              <Plus size={18} />
+              <span>New Chat</span>
             </button>
-          </div>
 
-          <button className="w-full flex items-center gap-3 p-3 bg-gray-800 hover:bg-gray-700 rounded-lg mb-4 transition-colors">
-            <Plus size={18} />
-            <span>New Chat</span>
-          </button>
-
-          <div className="space-y-2">
-            <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
-              <MessageSquare size={18} />
-              <span className="text-sm">Current Chat</span>
+            <div className="space-y-2">
+              <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
+                <MessageSquare size={18} />
+                <span className="text-sm">Current Chat</span>
+              </div>
             </div>
           </div>
+
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="mt-4 w-full flex items-center gap-3 p-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+          >
+            <AiOutlineLogout size={18} />
+            <span className="text-sm">Logout</span>
+          </button>
         </div>
       </div>
 
