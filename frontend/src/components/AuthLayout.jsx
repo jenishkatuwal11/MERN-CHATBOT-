@@ -5,13 +5,9 @@ function AuthLayout() {
 
   const handleLogin = (formData) => {
     console.log("Login data:", formData);
-    // Here you would typically send the login data to your backend
-    // For now, we just log it to the console
   };
   const handleRegister = (formData) => {
     console.log("Registration data:", formData);
-    // Here you would typically send the registration data to your backend
-    // For now, we just log it to the console
   };
 
   return (

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { DeepSeekR1 } = require("../controller/chatController");
+const { LlamaChat } = require("../controller/chatController");
 
-router.post("/chat", DeepSeekR1);
+router.post("/chat", LlamaChat);
 
 module.exports = router;

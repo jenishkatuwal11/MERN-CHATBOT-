@@ -1,20 +1,20 @@
-const OpenAI = require("openai");
+const { OpenAI } = require("openai");
 
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
   apiKey: process.env.OPENROUTER_API_KEY,
   defaultHeaders: {
-    "HTTP-Referer": "",
-    "X-Title": "",
+    "HTTP-Referer": "http://localhost:5173",
+    "X-Title": "MERN Chatbot",
   },
 });
 
-const DeepSeekR1 = async (req, res) => {
+const LlamaChat = async (req, res) => {
   const { message } = req.body;
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "deepseek/deepseek-r1:free",
+      model: "meta-llama/llama-3.3-70b-instruct:free",
       messages: [
         {
           role: "user",
@@ -23,17 +23,18 @@ const DeepSeekR1 = async (req, res) => {
       ],
     });
 
-    const reply = completion.choices?.[0]?.message?.content || "No reply";
+    const reply =
+      completion.choices?.[0]?.message?.content || "No reply from Llama 3.3";
     res.json({ reply });
   } catch (error) {
-    console.error("DeepSeek R1 error:", error);
+    console.error("Llama 3.3 error:", error?.response?.data || error.message);
     res.status(500).json({
       error:
+        error?.response?.data?.error?.message ||
         error.message ||
-        JSON.stringify(error) ||
-        "Failed to get response from DeepSeek R1",
+        "Failed to get response from Llama 3.3",
     });
   }
 };
 
-module.exports = { DeepSeekR1 };
+module.exports = { LlamaChat };
