@@ -1,20 +1,20 @@
 const OpenAI = require("openai");
 
 const openai = new OpenAI({
-  apiKey: process.env.MERN_GEMINFLASH,
   baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.DEEPSEEK_R1_API,
   defaultHeaders: {
-    "HTTP-Referer": "https://mern-chatbotai.onrender.com",
+    "HTTP-Referer": "https://mern-chabotai.onrender.com",
     "X-Title": "MERN Chatbot",
   },
 });
 
-const GeminiFlashLite = async (req, res) => {
+const DeepSeekR1 = async (req, res) => {
   const { message } = req.body;
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "google/gemini-2.5-flash-lite-preview-06-17",
+      model: "deepseek/deepseek-r1:free",
       messages: [
         {
           role: "user",
@@ -24,14 +24,16 @@ const GeminiFlashLite = async (req, res) => {
     });
 
     const reply = completion.choices?.[0]?.message?.content || "No reply";
-
     res.json({ reply });
   } catch (error) {
-    console.error("Gemini Flash Lite error:", error);
-    res
-      .status(500)
-      .json({ error: "Failed to get response from Gemini Flash Lite" });
+    console.error("DeepSeek R1 error:", error);
+    res.status(500).json({
+      error:
+        error.message ||
+        JSON.stringify(error) ||
+        "Failed to get response from DeepSeek R1",
+    });
   }
 };
 
-module.exports = { GeminiFlashLite };
+module.exports = { DeepSeekR1 };

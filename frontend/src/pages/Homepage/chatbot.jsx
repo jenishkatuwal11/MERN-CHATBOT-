@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Send, User, Bot, Menu, Plus, MessageSquare } from "lucide-react";
 import { AiOutlineLogout } from "react-icons/ai";
 
@@ -52,7 +52,7 @@ const ChatBotUI = () => {
 
       const botResponse = {
         id: messages.length + 2,
-        text: data.reply,
+        text: data.reply || data.error || "No response from AI assistant.",
         sender: "bot",
         timestamp: new Date(),
       };

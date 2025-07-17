@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { GeminiFlashLite } = require("../controller/chatController");
+const { DeepSeekR1 } = require("../controller/chatController");
 
-router.post("/chat", GeminiFlashLite);
+router.post("/chat", DeepSeekR1);
 
 module.exports = router;
