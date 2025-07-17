@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { LlamaChat } = require("../controller/chatController");
+const { GeminiChat } = require("../controller/chatController");
 
-router.post("/chat", LlamaChat);
+router.post("/chat", GeminiChat);
 
 module.exports = router;
