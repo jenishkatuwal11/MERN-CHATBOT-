@@ -7,10 +7,7 @@ const userRoutes = require("./routes/userRoutes.js");
 const botRoutes = require("./routes/botRoutes.js");
 
 const app = express();
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://mern-chatbotai.onrender.com",
-];
+const allowedOrigins = ["http://localhost:5173"];
 
 app.use(
   cors({
