@@ -5,6 +5,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes.js");
 const botRoutes = require("./routes/botRoutes.js");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 const allowedOrigins = ["http://localhost:5173"];
@@ -20,6 +21,7 @@ app.use(bodyParser.json());
 
 app.use("/api", userRoutes);
 app.use("/api", botRoutes);
+app.use("/api", authRoutes);
 
 connectDB();
 

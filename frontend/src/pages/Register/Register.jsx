@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { GoogleLogin } from "@react-oauth/google"; // Google OAuth Component
 
 const RegisterPage = ({ onSwitchToLogin, onRegister }) => {
   const navigate = useNavigate();
@@ -75,51 +76,71 @@ const RegisterPage = ({ onSwitchToLogin, onRegister }) => {
         autoClose: 3000,
       });
 
-      // Optional: call onRegister callback with API response
       onRegister?.(response.data);
       setTimeout(() => {
-        navigate("/"); // or wherever your login route is
+        navigate("/"); // Redirect to login after successful registration
       }, 3000);
     } catch (error) {
       console.error(
         "Registration failed:",
         error.response?.data?.message || error.message
       );
-      // Optional: set error message in state and show to user
     } finally {
-      // Always runs, success or error
       setIsLoading(false);
     }
   };
 
-  const handleGoogleRegister = () => {
-    console.log("Google register clicked");
-    // Implement Google OAuth here
+  const handleGoogleRegisterSuccess = async (response) => {
+    try {
+      setIsLoading(true);
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/google-login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token: response.credential }), // Send Google token to backend
+        }
+      );
+
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Registration successful!", {
+          position: "bottom-center",
+          autoClose: 2000,
+        });
+
+        onRegister?.(data.user);
+        localStorage.setItem("token", data.token); // Save token in localStorage
+        navigate("/chat"); // Redirect to chat after Google login
+      } else {
+        toast.error(data.message || "Registration failed", {
+          position: "bottom-center",
+          autoClose: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("Error during Google registration:", error);
+      toast.error("Something went wrong!", {
+        position: "bottom-center",
+        autoClose: 3000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
-              <User className="w-8 h-8 text-white" />
-            </div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
-              Create Account
-            </h2>
-            <p className="text-gray-600">Join us today</p>
-          </div>
-
           {/* Google Register Button */}
-          <button
-            onClick={handleGoogleRegister}
-            className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-200 rounded-xl py-3 px-4 text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 mb-6 cursor-pointer"
-          >
-            <FcGoogle className="w-5 h-5 text-red-500" />
-            Sign up with Google
-          </button>
+          <GoogleLogin
+            onSuccess={handleGoogleRegisterSuccess}
+            onError={(error) => console.log("Google Register Error:", error)}
+            useOneTap
+          />
 
           {/* Divider */}
           <div className="relative mb-6">
@@ -147,7 +168,7 @@ const RegisterPage = ({ onSwitchToLogin, onRegister }) => {
                   value={formData.firstname}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 ${
-                    errors.firstName ? "border-red-500" : "border-gray-200"
+                    errors.firstname ? "border-red-500" : "border-gray-200"
                   }`}
                   placeholder="First name"
                 />
@@ -234,8 +255,6 @@ const RegisterPage = ({ onSwitchToLogin, onRegister }) => {
               )}
             </div>
 
-            {/* Confirm Password Field */}
-
             {/* Submit Button */}
             <button
               onClick={handleSubmit}
@@ -269,4 +288,5 @@ const RegisterPage = ({ onSwitchToLogin, onRegister }) => {
     </div>
   );
 };
+
 export default RegisterPage;

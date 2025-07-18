@@ -78,10 +78,13 @@ const LoginPage = ({ onSwitchToRegister, onLogin }) => {
           autoClose: 2000,
         });
 
-        onLogin?.(data || formData);
+        // Update localStorage and onLogin callback
+        localStorage.setItem("token", data.token);
+        onLogin?.(data);
 
+        // Redirect after successful login
         setTimeout(() => {
-          navigate("/chat");
+          navigate("/chat"); // Make sure the URL is "/chat"
         }, 2000);
       } else {
         toast.error(data?.message || "Login failed", {
